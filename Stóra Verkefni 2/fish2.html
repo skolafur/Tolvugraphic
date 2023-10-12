@@ -1,0 +1,111 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FIIIIIIIIIIIISKAAAARARRRARAR!!!!!!!!!</title>
+    <style>
+      canvas {
+        display: inline-flexbox;
+        margin: 2rem 2rem;
+      }
+
+      .slider-container {
+        display: inline-flexbox;
+        margin-left: 5rem;
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+
+      .slider-label {
+        display: inline-block;
+        width: 120px;
+        text-align: right;
+        margin-right: 10px;
+      }
+
+      .slider-input {
+        width: 200px;
+      }
+    </style>
+  </head>
+  <script id="vertex-shader" type="x-shader/x-vertex">
+
+    attribute  vec4 vPosition;
+
+    uniform mat4 projection;
+    uniform mat4 modelview;
+
+    void main()
+    {
+        gl_Position = projection * modelview * vPosition;
+    }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+
+    precision mediump float;
+
+    uniform vec4 fColor;
+
+    void
+    main()
+    {
+        gl_FragColor = fColor;
+    }
+  </script>
+
+  <script type="text/javascript" src="/Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="/Common/initShaders.js"></script>
+  <script type="text/javascript" src="/Common/MV.js"></script>
+  <script type="text/javascript" src="/Stóra Verkefni 2/fish2.js"></script>
+
+  <body>
+    <table>
+        <tr>
+          <td id="gl-container">
+            <canvas id="gl-canvas" width="900" height="900">
+              Oops ... your browser doesn't support the HTML5 canvas element
+            </canvas>
+          </td>
+          <td>
+            <div class="slider-container">
+                <label class="slider-label" for="checkRadius">Radius:</label>
+                <input class="slider-input" type="range" id="checkRadius" min="1" max="10" step="0.11" value="1">
+                <span id="checkRadiusValue">1</span>
+            </div>
+  
+            <div class="slider-container">
+              <label class="slider-label" for="speedToggle">Speed:</label>
+              <input class="slider-input" type="range" id="speedToggle" min="1" max="10" step="0.1" value="1">
+              <span id="speedToggleValue">1</span>
+            </div>
+  
+            <div class="slider-container">
+              <label class="slider-label" for="weightCohesion">Cohesion:</label>
+              <input class="slider-input" type="range" id="weightCohesion" min="1" max="10" step="0.1" value="1">
+              <span id="weightCohesionValue">1</span>
+            </div>
+  
+            <div class="slider-container">
+              <label class="slider-label" for="weightAlignment">Alignment:</label>
+              <input class="slider-input" type="range" id="weightAlignment" min="1" max="10" step="0.1" value="1">
+            </div>
+  
+            <div class="slider-container">
+              <label class="slider-label" for="weightSeperation">Separation:</label>
+              <input class="slider-input" type="range" id="weightSeperation" min="1" max="10" step="0.1" value="1">
+              <span id="weightSeperationValue">1</span>
+            </div>
+  
+            <div class="slider-container">
+              <label class="slider-label" for="weightCurrDir">Current Direction:</label>
+              <input class="slider-input" type="range" id="weightCurrDir" min="1" max="10" step="0.1" value="10">
+              <span id="weightCurrDirValue">10</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+    <script src="your-script.js"></script>
+    <br />
+  </body>
+</html>
