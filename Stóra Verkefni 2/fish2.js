@@ -21,8 +21,8 @@ fishY = CreateArrayAddition(N, 2 * boxSize, -boxSize);
 var fishZ = new Array(N);
 fishZ = CreateArrayAddition(N, 2 * boxSize, -boxSize);
 
-var speed = 0.005;
-var speedToggle = 0.1;
+var speed = 0.01;
+var speedToggle = 1;
 
 var fishSpeed = new Array(N);
 fishSpeed = CreateArrayAddition(N, 0.2, 0.03);
@@ -59,7 +59,7 @@ incTail = CreateArrayAddition(N, 0.0, 2.0);
 var zView = 60.0;
 
 var weightCohesion = 0.002; //0.00005
-var weightAlignment = 0;
+var weightAlignment = 0.001;
 var weightSeperation = 0.001;
 var weightCurrDir = 1;
 
@@ -204,46 +204,47 @@ window.onload = function init() {
     }
   });
 
-var weightAlignmentSlider = document.getElementById("weightAlignment");
-
-var checkRadiusSlider = document.getElementById("checkRadius");
-var checkRadiusValue = document.getElementById("checkRadiusValue");
-checkRadiusSlider.addEventListener("input", function() {
+  var checkRadiusSlider = document.getElementById("checkRadius");
+  var checkRadiusValue = document.getElementById("checkRadiusValue");
+  checkRadiusSlider.addEventListener("input", function () {
     checkRadius = parseInt(checkRadiusSlider.value);
     checkRadiusValue.textContent = checkRadius;
-});
+  });
 
-var speedToggleSlider = document.getElementById("speedToggle");
-var speedToggleValue = document.getElementById("speedToggleValue");
-speedToggleSlider.addEventListener("input", function() {
+  var speedToggleSlider = document.getElementById("speedToggle");
+  var speedToggleValue = document.getElementById("speedToggleValue");
+  speedToggleSlider.addEventListener("input", function () {
     speedToggle = parseInt(speedToggleSlider.value);
     speedToggleValue.textContent = Math.floor(speedToggle);
-});
+  });
 
-var weightCohesionSlider = document.getElementById("weightCohesion");
-var weightCohesionValue = document.getElementById("weightCohesionValue");
-weightCohesionSlider.addEventListener("input", function() {
+  var weightCohesionSlider = document.getElementById("weightCohesion");
+  var weightCohesionValue = document.getElementById("weightCohesionValue");
+  weightCohesionSlider.addEventListener("input", function () {
     weightCohesion = 0.01 * parseInt(weightCohesionSlider.value);
     weightCohesionValue.textContent = Math.floor(weightCohesion / 0.01);
-});
+  });
 
-weightAlignmentSlider.addEventListener("input", function () {
-    weightAlignment = parseFloat(weightAlignmentSlider.value);
-});
+  var weightAlignmentSlider = document.getElementById("weightAlignment");
+  var weightAlignmentValue = document.getElementById("weightAlignmentValue");
+  weightAlignmentSlider.addEventListener("input", function () {
+    weightAlignment = 0.01 * parseInt(weightAlignmentSlider.value);
+    weightAlignmentValue.textContent = Math.floor(weightAlignment / 0.01);
+  });
 
-var weightSeperationSlider = document.getElementById("weightSeperation");
-var weightSeperationValue = document.getElementById("weightSeperationValue");
-weightSeperationSlider.addEventListener("input", function() {
+  var weightSeperationSlider = document.getElementById("weightSeperation");
+  var weightSeperationValue = document.getElementById("weightSeperationValue");
+  weightSeperationSlider.addEventListener("input", function () {
     weightSeperation = 0.01 * parseInt(weightSeperationSlider.value);
     weightSeperationValue.textContent = Math.floor(weightSeperation / 0.01);
-});
+  });
 
-var weightCurrDirSlider = document.getElementById("weightCurrDir");
-var weightCurrDirValue = document.getElementById("weightCurrDirValue");
-weightCurrDirSlider.addEventListener("input", function() {
+  var weightCurrDirSlider = document.getElementById("weightCurrDir");
+  var weightCurrDirValue = document.getElementById("weightCurrDirValue");
+  weightCurrDirSlider.addEventListener("input", function () {
     weightCurrDir = 0.01 * parseInt(weightCurrDirSlider.value);
     weightCurrDirValue.textContent = Math.floor(weightCurrDir / 0.01);
-});
+  });
 
   render();
 };
@@ -282,19 +283,23 @@ function DrawFish(mv, i) {
   }
 
   SetCohesion(i);
+  SetAlignment(i);
   SetSeperation(i);
 
   dX[i] =
     dX[i] * weightCurrDir +
     avgXCoh * weightCohesion +
+    avgXAli * weightAlignment +
     avgXSep * weightSeperation;
   dY[i] =
     dY[i] * weightCurrDir +
     avgYCoh * weightCohesion +
+    avgYAli * weightAlignment +
     avgYSep * weightSeperation;
   dZ[i] =
     dZ[i] * weightCurrDir +
     avgZCoh * weightCohesion +
+    avgZAli * weightAlignment +
     avgZSep * weightSeperation;
 
   vecLength = GetLength(dX[i], dY[i], dZ[i]);
@@ -436,54 +441,60 @@ function SetAlignment(fish) {
       ) < checkRadius
     ) {
       fishCounter++;
-      avgX += fishX_new[j] - fishX[j];
-      avgY += fishY_new[j] - fishY[j];
-      avgZ += fishZ_new[j] - fishZ[j];
+      avgX += dX[j];
+      avgY += dY[j];
+      avgZ += dZ[j];
     }
   }
   if (fishCounter == 0) {
-    avgX = dX[i];
-    avgY = dY[i];
-    avgZ = dZ[i];
-    return;
+    avgX = dX[fish];
+    avgY = dY[fish];
+    avgZ = dZ[fish];
+  } else {
+    avgX /= fishCounter;
+    avgY /= fishCounter;
+    avgZ /= fishCounter;
   }
-  avgX /= fishCounter;
-  avgY /= fishCounter;
-  avgZ /= fishCounter;
 
-  dX[i] += avgX;
-  dY[i] += avgY;
-  dZ[i] += avgZ;
+  vecLength = GetLength(avgX, avgY, avgZ);
+
+  avgXAli = avgX / vecLength;
+  avgYAli = avgY / vecLength;
+  avgZAli = avgZ / vecLength;
 }
 
 function SetSeperation(fish) {
-    fishCounter = 0;
-    avgX = 0;
-    avgY = 0;
-    avgZ = 0;
+  fishCounter = 0;
+  avgX = 0;
+  avgY = 0;
+  avgZ = 0;
 
-    for (j = 0; j < N; j++) {
-        if (j === fish) {
-            continue;
-        }
-        vecLength = GetLength(fishX[fish] - fishX[j], fishY[fish] - fishY[j], fishZ[fish] - fishZ[j]);
-        if (vecLength < checkRadius) {
-            fishCounter++;
-            avgX += fishX[fish] - fishX[j];
-            avgY += fishY[fish] - fishY[j];
-            avgZ += fishZ[fish] - fishZ[j];
-        }
+  for (j = 0; j < N; j++) {
+    if (j === fish) {
+      continue;
     }
-    if (fishCounter > 0) {
-        vecLength = GetLength(avgX, avgY, avgZ);
-        avgXSep = avgX / vecLength;
-        avgYSep = avgY / vecLength;
-        avgZSep = avgZ / vecLength;
-    } else {
-        avgXSep = 0;
-        avgYSep = 0;
-        avgZSep = 0;
+    vecLength = GetLength(
+      fishX[fish] - fishX[j],
+      fishY[fish] - fishY[j],
+      fishZ[fish] - fishZ[j]
+    );
+    if (vecLength < checkRadius) {
+      fishCounter++;
+      avgX += fishX[fish] - fishX[j];
+      avgY += fishY[fish] - fishY[j];
+      avgZ += fishZ[fish] - fishZ[j];
     }
+  }
+  if (fishCounter > 0) {
+    vecLength = GetLength(avgX, avgY, avgZ);
+    avgXSep = avgX / vecLength;
+    avgYSep = avgY / vecLength;
+    avgZSep = avgZ / vecLength;
+  } else {
+    avgXSep = 0;
+    avgYSep = 0;
+    avgZSep = 0;
+  }
 }
 
 function wrapAround(coord) {
