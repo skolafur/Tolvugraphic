@@ -8,7 +8,7 @@ var NumTail = 3;
 
 var boxSize = 25.0;
 
-var checkRadius = 3.0;
+var checkRadius = 1;
 
 var vBuffer;
 var vBoxBuffer;
@@ -56,12 +56,12 @@ rotTail = CreateArray(N, 0);
 var incTail = new Array(N);
 incTail = CreateArrayAddition(N, 0.0, 2.0);
 
-var zView = 60.0;
+var zView = 60;
 
-var weightCohesion = 0.002; //0.00005
-var weightAlignment = 0.001;
-var weightSeperation = 0.001;
-var weightCurrDir = 1;
+var weightCohesion = 1;
+var weightAlignment = 1;
+var weightSeperation = 1;
+var weightCurrDir = 10;
 
 var fishCounter;
 
@@ -82,7 +82,6 @@ var avgYSep;
 var avgZSep;
 
 var vecLength;
-var addRot = 0.0;
 
 var rotationY;
 var rotationZ;
@@ -182,17 +181,6 @@ window.onload = function init() {
       spinX += (e.offsetY - origY) % 360;
       origX = e.offsetX;
       origY = e.offsetY;
-    }
-  });
-
-  window.addEventListener("keydown", function (e) {
-    switch (e.keyCode) {
-      case 37: // vinstri ör
-        addRot -= 2;
-        break;
-      case 39: // hægri ör
-        addRot += 2;
-        break;
     }
   });
 
@@ -315,7 +303,7 @@ function DrawFish(mv, i) {
   GetAngles(i);
 
   mv = mult(mv, translate(fishX_new[i], fishY_new[i], fishZ_new[i]));
-  mv = mult(mv, rotateY((-rotationY * 180) / Math.PI - addRot));
+  mv = mult(mv, rotateY((-rotationY * 180) / Math.PI));
   mv = mult(mv, rotateZ((rotationZ * 180) / Math.PI));
 
   fishX[i] = fishX_new[i];
@@ -335,6 +323,7 @@ function DrawFish(mv, i) {
 
   gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
   gl.drawArrays(gl.TRIANGLES, NumBody, NumTail);
+
 }
 
 function DrawCube(mv) {
