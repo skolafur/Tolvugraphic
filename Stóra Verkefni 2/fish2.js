@@ -58,10 +58,10 @@ incTail = CreateArrayAddition(N, 0.0, 2.0);
 
 var zView = 60;
 
-var weightCohesion = 1;
-var weightAlignment = 1;
-var weightSeperation = 1;
-var weightCurrDir = 10;
+var weightCohesion = 0;
+var weightAlignment = 0;
+var weightSeperation = 0;
+var weightCurrDir = 0.05;
 
 var fishCounter;
 
@@ -209,29 +209,29 @@ window.onload = function init() {
   var weightCohesionSlider = document.getElementById("weightCohesion");
   var weightCohesionValue = document.getElementById("weightCohesionValue");
   weightCohesionSlider.addEventListener("input", function () {
-    weightCohesion = 0.01 * parseInt(weightCohesionSlider.value);
-    weightCohesionValue.textContent = Math.floor(weightCohesion / 0.01);
+    weightCohesion = 0.005 * parseInt(weightCohesionSlider.value);
+    weightCohesionValue.textContent = Math.floor(weightCohesion / 0.005);
   });
 
   var weightAlignmentSlider = document.getElementById("weightAlignment");
   var weightAlignmentValue = document.getElementById("weightAlignmentValue");
   weightAlignmentSlider.addEventListener("input", function () {
-    weightAlignment = 0.01 * parseInt(weightAlignmentSlider.value);
-    weightAlignmentValue.textContent = Math.floor(weightAlignment / 0.01);
+    weightAlignment = 0.005 * parseInt(weightAlignmentSlider.value);
+    weightAlignmentValue.textContent = Math.floor(weightAlignment / 0.005);
   });
 
   var weightSeperationSlider = document.getElementById("weightSeperation");
   var weightSeperationValue = document.getElementById("weightSeperationValue");
   weightSeperationSlider.addEventListener("input", function () {
-    weightSeperation = 0.01 * parseInt(weightSeperationSlider.value);
-    weightSeperationValue.textContent = Math.floor(weightSeperation / 0.01);
+    weightSeperation = 0.005 * parseInt(weightSeperationSlider.value);
+    weightSeperationValue.textContent = Math.floor(weightSeperation / 0.005);
   });
 
   var weightCurrDirSlider = document.getElementById("weightCurrDir");
   var weightCurrDirValue = document.getElementById("weightCurrDirValue");
   weightCurrDirSlider.addEventListener("input", function () {
-    weightCurrDir = 0.01 * parseInt(weightCurrDirSlider.value);
-    weightCurrDirValue.textContent = Math.floor(weightCurrDir / 0.01);
+    weightCurrDir = 0.005 * parseInt(weightCurrDirSlider.value);
+    weightCurrDirValue.textContent = Math.floor(weightCurrDir / 0.005);
   });
 
   render();
